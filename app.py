@@ -2,12 +2,43 @@ import json
 import urllib2
 from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////C:\ow.db'
+db = SQLAlchemy(app)
 socketio = SocketIO(app)
 
 OW_API_HEADERS = {"Accept": "application/json", "User-Agent": "Mozilla/5.0"}
 QUOTES = {}
+
+class Hero(db.Model):
+    __tablename__ = 'hero'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(pow(2, 7)), nullable=False)
+    quotes = orm.relationship("Quote", backref="hero")
+
+    def __repr__(self):
+        return '<Hero %r>' % self.name
+
+class Quote(db.Model):
+    __tablename__ = 'quote'
+
+    id = db.Column(db.Integer, primary_key=True)
+    text = db.Column(db.String(pow(2, 10)))
+    hero_id = db.Column(db.Integer, db.ForeignKey('hero.id'))
+
+    def __repr__(self):
+        return '<Quote %r - %r>' % (self.hero, self.text)
+
+def hero():
+    h=Hero(name='Ana')
+    q=Quote(text='Hi', hero=h)
+    db.session.add(h)
+    db.session.add(q)
+    db.session.commit()
+
+
 
 @app.route('/populate_data')
 def populate_data():

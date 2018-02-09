@@ -1,4 +1,6 @@
 flask
 flask-api
 flask-socketio
+sqlalchemy
+flask-sqlalchemy
 disco-py
