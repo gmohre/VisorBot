@@ -6,10 +6,6 @@ from flask_socketio import SocketIO, emit
 app = Flask(__name__)
 socketio = SocketIO(app)
 
-values = {
-    'slider1': 25,
-    'slider2': 0,
-}
 OW_API_HEADERS = {"Accept": "application/json", "User-Agent": "Mozilla/5.0"}
 QUOTES = {}
 
